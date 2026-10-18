@@ -49,7 +49,7 @@ h2 em { color: var(--accent) }
 .edu { display: grid; gap: 44px }
 .topic { padding-bottom: 28px; border-bottom: 1px solid var(--line) }
 .vlab { margin: 10px 0 0; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent) }
-.edu .strip { grid-template-columns: repeat(6, minmax(0, 1fr)) }
+.edu .strip { grid-template-columns: repeat(var(--n, 6), minmax(0, 1fr)) }
 @media (max-width: 640px) { .edu .strip { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
 .stories { display: grid; grid-template-columns: repeat(4, minmax(0, 200px)); gap: 12px }
 @media (max-width: 640px) { .stories { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
@@ -82,7 +82,7 @@ dialog p { color: #fbf6ee; text-align: center; margin: 10px 0 0; font-size: .9re
   <div class="grid" id="vyber"></div>
 
   <h2>Edukatívne <em>carousely</em></h2>
-  <p class="sub">Päť carouselov, ktoré vysvetľujú procedúry, každý v troch variantoch pod sebou na porovnanie. A je snová, B svetlý editoriál so slnkom z okna a cik-cak fotkami, C biela a krémová s krivkou, ktorá plynulo prechádza cez všetky snímky. Texty o bankovaní a maderoterapii vychádzajú z webu, scratching treba overiť s Laurou.</p>
+  <p class="sub">Päť carouselov, ktoré vysvetľujú procedúry, každý vo štyroch variantoch pod sebou na porovnanie. A2 je vylepšená snová: vlastný motív každej témy, výraznejšie čísla, svetlo, krivka cez snímky a snímka „Uložte si to“. A je pôvodná snová, B svetlý editoriál so slnkom z okna a cik-cak fotkami, C biela a krémová s krivkou, ktorá plynulo prechádza cez všetky snímky. Texty o bankovaní a maderoterapii vychádzajú z webu, scratching treba overiť s Laurou.</p>
   <div class="edu" id="edu"></div>
 
   <h2>Masáže <em>pre páry</em></h2>
@@ -136,8 +136,8 @@ const STORIES = [["story_cennik_v2","Story · celý cenník (nový štýl)"],["s
 const VYBER = ["post_22_hero", "post_23_logo", "post_25_spomalte", "post_26_stacit_prist", "post_32_ticho", "post_21_rovnovaha", "post_33_okna", "post_27_ponuka", "post_02_citat", "post_34_obeh", "post_40_dychajte", "post_29_poukaz", "post_28_od_hlavy", "post_39_tyzden", "post_36_stuha", "post_37_vstupenka", "post_31_pokoj", "post_09_rezervacia", "post_38_kolaz", "post_16_cas", "post_03_maderoterapia", "post_06_sluzby", "post_07_prva_navsteva", "post_35_pasy"].map(k => ORDER.find(o => o[0] === k));
 const EDU_SETS = [["bankovanie","Bankovanie: prečo ostanú kruhy",6],["maderoterapia","Maderoterapia: čo robia valčeky",6],["prva_masaz","Prvá masáž: čo vás čaká",6],["30_60_90","30, 60 alebo 90 minút",6],["scratching","Scratching therapy",5]];
 const EDU = [];
-const EDU_VAR = [["", "A · snová"], ["b_", "B · editoriál vo svetle"], ["c_", "C · panoráma na bielom"]];
-EDU_SETS.forEach((e, c) => EDU_VAR.forEach(v => { for (let k = 1; k <= e[2]; k++) EDU.push([`${v[0]}edu_${c + 1}_${e[0]}_${k}`, `${e[1]} · ${v[1]} · ${k}/${e[2]}`]); }));
+const EDU_VAR = [["a2_", "A2 · snová, vylepšená (motív, svetlo, „Uložte si to“)", 1], ["", "A · snová, pôvodná", 0], ["b_", "B · editoriál vo svetle", 0], ["c_", "C · panoráma na bielom", 0]];
+EDU_SETS.forEach((e, c) => EDU_VAR.forEach(v => { const N = e[2] + v[2]; for (let k = 1; k <= N; k++) EDU.push([`${v[0]}edu_${c + 1}_${e[0]}_${k}`, `${e[1]} · ${v[1]} · ${k}/${N}`]); }));
 const ALL = [...VYBER, ...EDU, ...ORDER, ...COVERS, ...STORIES];
 function tile(item, idx, numbered, set) {
   const b = document.createElement("button");
@@ -152,10 +152,11 @@ const vyber = document.getElementById("vyber");
 VYBER.forEach((it, i) => vyber.appendChild(tile(it, i, true, "v")));
 const eduEl = document.getElementById("edu"); let ei = 0;
 EDU_SETS.forEach(e => { const f = document.createElement("figure"); f.className = "car topic";
-  const c = document.createElement("figcaption"); c.innerHTML = `<b>${e[1]}</b><span>${e[2]} snímok · 3 varianty</span>`; f.appendChild(c);
+  const c = document.createElement("figcaption"); c.innerHTML = `<b>${e[1]}</b><span>4 varianty</span>`; f.appendChild(c);
   EDU_VAR.forEach(v => { const lab = document.createElement("p"); lab.className = "vlab"; lab.textContent = v[1]; f.appendChild(lab);
-    const st = document.createElement("div"); st.className = "strip";
-    for (let k = 0; k < e[2]; k++, ei++) st.appendChild(tile(EDU[ei], ei, false, "e"));
+    const st = document.createElement("div"); st.className = "strip"; const N = e[2] + v[2];
+    st.style.setProperty("--n", N);
+    for (let k = 0; k < N; k++, ei++) st.appendChild(tile(EDU[ei], ei, false, "e"));
     f.appendChild(st); });
   eduEl.appendChild(f); });
 const grid = document.getElementById("grid");
