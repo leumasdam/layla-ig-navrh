@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>LAYLA – návrh Instagramu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Figtree:wght@300;400;500&display=swap">
+<style>
+/* layout: profil ako na Instagrame (hlavička + mriežka 3 stĺpce 4:5), pod ním varianty obálky cenníka; klik = detail */
+:root {
+  --bg: #f7f2ea; --surface: #fffdf9; --ink: #1f1b17; --muted: #6c675f; --accent: #7a6555; --line: #e2d8ca;
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #171411; --surface: #1f1b17; --ink: #f2ebe1; --muted: #a39584; --accent: #c2b3a0; --line: #3a332d; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #171411; --surface: #1f1b17; --ink: #f2ebe1; --muted: #a39584; --accent: #c2b3a0; --line: #3a332d; color-scheme: dark }
+*{box-sizing:border-box} img{max-width:100%} [hidden]{display:none!important}
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5 }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+header.profile { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; padding-bottom: 28px; border-bottom: 1px solid var(--line) }
+.avatar { width: 112px; aspect-ratio: 1; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center }
+.avatar img { width: 70%; filter: var(--logo-filter, none) }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar img { filter: invert(1) } }
+:root[data-theme="dark"] .avatar img { filter: invert(1) }
+.handle { font-size: 1.25rem; font-weight: 500; margin: 0 }
+.stats { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 8px 0; color: var(--muted); font-variant-numeric: tabular-nums }
+.stats b { color: var(--ink); font-weight: 500 }
+.bio { margin: 0; max-width: 52ch }
+.bio .name { font-family: var(--display); font-size: 1.15rem }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 14px; color: var(--muted); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px }
+.tile { position: relative; padding: 0; border: 0; background: var(--surface); cursor: zoom-in; aspect-ratio: 4 / 5; max-width: 100%; overflow: hidden }
+.tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease }
+.tile:hover img { transform: scale(1.03) }
+.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.tile .no { position: absolute; left: 6px; top: 6px; font: 500 11px/1 var(--body); padding: 4px 6px; border-radius: 4px; background: rgba(31,27,23,.62); color: #fbf6ee; font-variant-numeric: tabular-nums }
+h2 { font-family: var(--display); font-weight: 400; font-size: 1.9rem; margin: 56px 0 6px; text-wrap: balance }
+h2.first { margin-top: 32px }
+h2 em { color: var(--accent) }
+.sub { color: var(--muted); margin: 0 0 18px; max-width: 60ch }
+.covers { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 28px 24px }
+.car { margin: 0; display: grid; gap: 8px; min-width: 0 }
+.car figcaption { display: flex; justify-content: space-between; gap: 12px; font-size: .82rem; color: var(--muted); letter-spacing: .04em }
+.car figcaption b { color: var(--ink); font-weight: 500 }
+.strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px }
+.strip .tile { border-radius: 4px }
+.edu { display: grid; gap: 28px }
+.edu .strip { grid-template-columns: repeat(6, minmax(0, 1fr)) }
+@media (max-width: 640px) { .edu .strip { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
+.stories { display: grid; grid-template-columns: repeat(4, minmax(0, 200px)); gap: 12px }
+@media (max-width: 640px) { .stories { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+.stories .tile { aspect-ratio: 9 / 16; border-radius: 6px }
+dialog { border: 0; padding: 0; background: transparent; max-width: min(92vw, 560px); width: 100% }
+dialog::backdrop { background: rgba(15,12,10,.82) }
+dialog img { width: 100%; display: block; border-radius: 6px }
+dialog p { color: #fbf6ee; text-align: center; margin: 10px 0 0; font-size: .9rem; letter-spacing: .04em }
+.nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px }
+.nav button { font: 500 .85rem var(--body); color: #fbf6ee; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 8px 16px; cursor: pointer }
+.nav button:focus-visible { outline: 2px solid #fbf6ee }
+@media (max-width: 560px) { header.profile { grid-template-columns: 1fr; justify-items: start } .avatar { width: 84px } .grid { gap: 2px } }
+@media (prefers-reduced-motion: reduce) { .tile img { transition: none } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="profile">
+    <div class="avatar"><img src="logo.svg" alt="LAYLA"></div>
+    <div>
+      <p class="handle">masazelayla</p>
+      <div class="stats"><span><b>46</b> príspevkov v pláne</span><span><b>24</b> vo výbere</span><span><b>9</b> variantov carouselu cenníka</span><span><b>4</b> stories</span><span><b>5</b> edukatívnych carouselov</span></div>
+      <p class="bio"><span class="name">Masáže Layla</span><br>Masáže · bankovanie · maderoterapia · scratching<br>Hodžova 4304/20, Piešťany · denne 8 – 20</p>
+    </div>
+  </header>
+
+  <h2 class="first">Výber <em>v jednom štýle</em></h2>
+  <p class="sub">24 postov, ktoré k sebe ladia: snové svetlé fotky, tiene listov, tenké linky. Fotka a krémový text sa striedajú do šachovnice, takže profil drží rytmus.</p>
+  <div class="grid" id="vyber"></div>
+
+  <h2>Edukatívne <em>carousely</em></h2>
+  <p class="sub">Päť carouselov, ktoré vysvetľujú procedúry. Texty o bankovaní a maderoterapii vychádzajú z webu, scratching treba overiť s Laurou.</p>
+  <div class="edu" id="edu"></div>
+
+  <h2>Masáže <em>pre páry</em></h2>
+  <p class="sub">Šesť postov pre páry, ktoré chodia spolu. Texty neprisľubujú masáž súčasne, píšu o dvoch termínoch za sebou.</p>
+  <div class="grid" id="pary"></div>
+
+  <h2>Všetky <em>posty</em></h2>
+  <div class="legend"><span>Poradie ako na profile: 1 = najnovší</span><span>Klik = detail, šípky = listovanie</span></div>
+  <div class="grid" id="grid"></div>
+
+  <h2>Obálka <em>cenníka</em></h2>
+  <p class="sub">Celý carousel vedľa seba: obálka a za ňou snímky 2/3 (masáže) a 3/3 (bankovanie, madero, scratching). Deväť variantov obálky, snímky 2 a 3 sú zatiaľ spoločné.</p>
+  <div class="covers" id="covers"></div>
+
+  <h2>Cenník <em>v stories</em></h2>
+  <p class="sub">Prvá je nová v štýle carouselu, variant 2. Zvyšné tri sú pôvodné. Všetky majú bezpečnú zónu hore a dole.</p>
+  <div class="stories" id="stories"></div>
+</div>
+
+<dialog id="dlg" aria-label="Detail príspevku">
+  <img id="dlgImg" alt="">
+  <p id="dlgCap"></p>
+  <div class="nav"><button id="prev" type="button">← Predošlý</button><button id="close" type="button">Zavrieť</button><button id="next" type="button">Ďalší →</button></div>
+</dialog>
+
+<script>
+// poradie: striedanie tmavé / fotka / text, rovnaké témy nie vedľa seba
+const ORDER = [
+  ["post_41_pre_dvoch","Pre dvoch"],["post_42_rande","Rande inak"],["post_43_ty_a_ja","Ty a ja"],
+  ["post_44_2x60","2 × 60 minút"],["post_45_darcek_dvoch","Darujte čas pre dvoch"],["post_46_bez_telefonu","Bez telefónu"],
+  ["post_32_ticho","Ticho"],["post_39_tyzden","Každý deň 8 – 20"],["post_40_dychajte","Dýchajte"],
+  ["post_37_vstupenka","Poukaz ako vstupenka"],["post_31_pokoj","Pokoj"],["post_34_obeh","Večer len pre vás"],
+  ["post_36_stuha","Telo si pamätá"],["post_35_pasy","Vyberte si svoj rytmus"],["post_38_kolaz","Priestor, ktorý dýcha"],
+  ["post_33_okna","Miesto, kde čas plynie pomalšie"],
+  ["post_22_hero","Telo v pohode"],["post_23_logo","Logo"],["post_25_spomalte","Spomaľte"],
+  ["post_26_stacit_prist","Stačí prísť"],["post_08_nohy","Masáž nôh"],["post_21_rovnovaha","Rovnováha"],
+  ["post_01_studio","Štúdio"],["post_27_ponuka","Ponuka"],["post_14_magazin","Magazín"],
+  ["post_18_nadych","Nádych. Výdych."],["post_12_kruh","Telo v pohode, kruh"],["post_29_poukaz","Darujte pokoj"],
+  ["post_04_bankovanie","Bankovanie"],["post_02_citat","Citát"],["post_11_mozaika","Mozaika"],
+  ["post_30_kde","Kde nás nájdete"],["post_09_rezervacia","Rezervácia"],["post_20_ram","Uvoľnenie"],
+  ["post_16_cas","Koľko času máte?"],["post_17_diagonala","Drevo, teplo a pokoj"],["post_05_poukaz","Darčekový poukaz"],
+  ["post_10_chrbat","Masáž chrbta"],["post_19_preco","Prečo práve my?"],["post_13_otvorene","Otvorené 8 – 20"],
+  ["post_07_prva_navsteva","Prvá návšteva"],["post_28_od_hlavy","Od hlavy po päty"],["post_03_maderoterapia","Maderoterapia"],
+  ["post_24_zlava","−10 % na prvú masáž"],["post_06_sluzby","Naše služby"],["post_15_polaroid","Polaroid"]
+];
+const COVER_KEYS = ["carousel_1","carousel_1_v2","carousel_1_v3","carousel_1_v4","carousel_1_v5","carousel_1_v6","carousel_1_v7","carousel_1_v8","carousel_1_v9"];
+const COVERS = [];
+COVER_KEYS.forEach((k, i) => { const nm = i ? "Variant " + (i + 1) : "Pôvodná";
+  COVERS.push([k, nm + " · 1/3 obálka"], ["carousel_2", nm + " · 2/3 masáže"], ["carousel_3", nm + " · 3/3 bankovanie, madero, scratching"]); });
+const STORIES = [["story_cennik_v2","Story · celý cenník (nový štýl)"],["story_1","Story 1 · masáže"],["story_2","Story 2 · bankovanie, madero, scratching"],["story_3","Story 3 · celý cenník"]];
+const VYBER = ["post_22_hero", "post_23_logo", "post_25_spomalte", "post_26_stacit_prist", "post_32_ticho", "post_21_rovnovaha", "post_33_okna", "post_27_ponuka", "post_02_citat", "post_34_obeh", "post_40_dychajte", "post_29_poukaz", "post_28_od_hlavy", "post_39_tyzden", "post_36_stuha", "post_37_vstupenka", "post_31_pokoj", "post_09_rezervacia", "post_38_kolaz", "post_16_cas", "post_03_maderoterapia", "post_06_sluzby", "post_07_prva_navsteva", "post_35_pasy"].map(k => ORDER.find(o => o[0] === k));
+const EDU_SETS = [["bankovanie","Bankovanie: prečo ostanú kruhy",6],["maderoterapia","Maderoterapia: čo robia valčeky",6],["prva_masaz","Prvá masáž: čo vás čaká",6],["30_60_90","30, 60 alebo 90 minút",6],["scratching","Scratching therapy",5]];
+const EDU = [];
+EDU_SETS.forEach((e, c) => { for (let k = 1; k <= e[2]; k++) EDU.push([`edu_${c + 1}_${e[0]}_${k}`, `${e[1]} · ${k}/${e[2]}`]); });
+const ALL = [...VYBER, ...EDU, ...ORDER, ...COVERS, ...STORIES];
+function tile(item, idx, numbered, set) {
+  const b = document.createElement("button");
+  b.className = "tile"; b.type = "button"; b.setAttribute("aria-label", item[1]);
+  b.innerHTML = `<img src="img/${item[0]}.jpg" alt="${item[1]}" loading="lazy">` + (numbered ? `<span class="no">${idx + 1}</span>` : "");
+  const nV = VYBER.length, nE = EDU.length, nO = ORDER.length;
+  const base = { v: 0, e: nV, a: nV + nE, c: nV + nE + nO, s: nV + nE + nO + COVERS.length }[set];
+  b.addEventListener("click", () => open(base + idx));
+  return b;
+}
+const vyber = document.getElementById("vyber");
+VYBER.forEach((it, i) => vyber.appendChild(tile(it, i, true, "v")));
+const eduEl = document.getElementById("edu"); let ei = 0;
+EDU_SETS.forEach(e => { const f = document.createElement("figure"); f.className = "car";
+  const c = document.createElement("figcaption"); c.innerHTML = `<b>${e[1]}</b><span>${e[2]} snímok</span>`; f.appendChild(c);
+  const st = document.createElement("div"); st.className = "strip";
+  for (let k = 0; k < e[2]; k++, ei++) st.appendChild(tile(EDU[ei], ei, false, "e"));
+  f.appendChild(st); eduEl.appendChild(f); });
+const paryEl = document.getElementById("pary");
+ORDER.slice(0, 6).forEach((it, i) => paryEl.appendChild(tile(it, i, false, "a")));
+const grid = document.getElementById("grid");
+ORDER.forEach((it, i) => grid.appendChild(tile(it, i, true, "a")));
+const covers = document.getElementById("covers");
+COVER_KEYS.forEach((k, i) => { const f = document.createElement("figure"); f.className = "car";
+  const c = document.createElement("figcaption"); c.innerHTML = `<b>${i ? "Variant " + (i + 1) : "Pôvodná"}</b><span>3 snímky</span>`; f.appendChild(c);
+  const st = document.createElement("div"); st.className = "strip";
+  for (let j = 0; j < 3; j++) st.appendChild(tile(COVERS[i * 3 + j], i * 3 + j, false, "c"));
+  f.appendChild(st); covers.appendChild(f); });
+const stories = document.getElementById("stories");
+STORIES.forEach((it, i) => stories.appendChild(tile(it, i, false, "s")));
+const dlg = document.getElementById("dlg"), dImg = document.getElementById("dlgImg"), dCap = document.getElementById("dlgCap");
+let cur = 0;
+function show(i) { cur = (i + ALL.length) % ALL.length; const it = ALL[cur]; dImg.src = `img/${it[0]}.jpg`; dImg.alt = it[1];
+  const nV = VYBER.length, nE = EDU.length, nO = ORDER.length;
+  dCap.textContent = (cur < nV ? `Výber ${cur + 1} / ${nV} · ` : cur < nV + nE ? "" : cur < nV + nE + nO ? `${cur - nV - nE + 1} / ${nO} · ` : "Cenník · ") + it[1]; }
+function open(i) { show(i); if (!dlg.open) dlg.showModal(); }
+document.getElementById("prev").onclick = () => show(cur - 1);
+document.getElementById("next").onclick = () => show(cur + 1);
+document.getElementById("close").onclick = () => dlg.close();
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+document.addEventListener("keydown", e => { if (!dlg.open) return; if (e.key === "ArrowLeft") show(cur - 1); if (e.key === "ArrowRight") show(cur + 1); });
+</script>
+
+</body>
+</html>
