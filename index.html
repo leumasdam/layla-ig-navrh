@@ -82,7 +82,7 @@ dialog p { color: #fbf6ee; text-align: center; margin: 10px 0 0; font-size: .9re
   <div class="grid" id="vyber"></div>
 
   <h2>Edukatívne <em>carousely</em></h2>
-  <p class="sub">Päť carouselov, ktoré vysvetľujú procedúry, každý v troch variantoch pod sebou na porovnanie. A je snová, B svetlý editoriál so slnkom z okna a cik-cak fotkami, C večerná so sviečkou a krivkou, ktorá plynulo prechádza cez všetky snímky. Texty o bankovaní a maderoterapii vychádzajú z webu, scratching treba overiť s Laurou.</p>
+  <p class="sub">Päť carouselov, ktoré vysvetľujú procedúry, každý v troch variantoch pod sebou na porovnanie. A je snová, B svetlý editoriál so slnkom z okna a cik-cak fotkami, C biela a krémová s krivkou, ktorá plynulo prechádza cez všetky snímky. Texty o bankovaní a maderoterapii vychádzajú z webu, scratching treba overiť s Laurou.</p>
   <div class="edu" id="edu"></div>
 
   <h2>Masáže <em>pre páry</em></h2>
@@ -136,7 +136,7 @@ const STORIES = [["story_cennik_v2","Story · celý cenník (nový štýl)"],["s
 const VYBER = ["post_22_hero", "post_23_logo", "post_25_spomalte", "post_26_stacit_prist", "post_32_ticho", "post_21_rovnovaha", "post_33_okna", "post_27_ponuka", "post_02_citat", "post_34_obeh", "post_40_dychajte", "post_29_poukaz", "post_28_od_hlavy", "post_39_tyzden", "post_36_stuha", "post_37_vstupenka", "post_31_pokoj", "post_09_rezervacia", "post_38_kolaz", "post_16_cas", "post_03_maderoterapia", "post_06_sluzby", "post_07_prva_navsteva", "post_35_pasy"].map(k => ORDER.find(o => o[0] === k));
 const EDU_SETS = [["bankovanie","Bankovanie: prečo ostanú kruhy",6],["maderoterapia","Maderoterapia: čo robia valčeky",6],["prva_masaz","Prvá masáž: čo vás čaká",6],["30_60_90","30, 60 alebo 90 minút",6],["scratching","Scratching therapy",5]];
 const EDU = [];
-const EDU_VAR = [["", "A · snová"], ["b_", "B · editoriál vo svetle"], ["c_", "C · večer pri sviečke"]];
+const EDU_VAR = [["", "A · snová"], ["b_", "B · editoriál vo svetle"], ["c_", "C · panoráma na bielom"]];
 EDU_SETS.forEach((e, c) => EDU_VAR.forEach(v => { for (let k = 1; k <= e[2]; k++) EDU.push([`${v[0]}edu_${c + 1}_${e[0]}_${k}`, `${e[1]} · ${v[1]} · ${k}/${e[2]}`]); }));
 const ALL = [...VYBER, ...EDU, ...ORDER, ...COVERS, ...STORIES];
 function tile(item, idx, numbered, set) {
