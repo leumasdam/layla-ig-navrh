@@ -46,7 +46,9 @@ h2 em { color: var(--accent) }
 .car figcaption b { color: var(--ink); font-weight: 500 }
 .strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px }
 .strip .tile { border-radius: 4px }
-.edu { display: grid; gap: 28px }
+.edu { display: grid; gap: 44px }
+.topic { padding-bottom: 28px; border-bottom: 1px solid var(--line) }
+.vlab { margin: 10px 0 0; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent) }
 .edu .strip { grid-template-columns: repeat(6, minmax(0, 1fr)) }
 @media (max-width: 640px) { .edu .strip { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
 .stories { display: grid; grid-template-columns: repeat(4, minmax(0, 200px)); gap: 12px }
@@ -80,7 +82,7 @@ dialog p { color: #fbf6ee; text-align: center; margin: 10px 0 0; font-size: .9re
   <div class="grid" id="vyber"></div>
 
   <h2>Edukatívne <em>carousely</em></h2>
-  <p class="sub">Päť carouselov, ktoré vysvetľujú procedúry. Texty o bankovaní a maderoterapii vychádzajú z webu, scratching treba overiť s Laurou.</p>
+  <p class="sub">Päť carouselov, ktoré vysvetľujú procedúry, každý v troch variantoch pod sebou na porovnanie. A je snová, B svetlý editoriál so slnkom z okna a cik-cak fotkami, C večerná so sviečkou a krivkou, ktorá plynulo prechádza cez všetky snímky. Texty o bankovaní a maderoterapii vychádzajú z webu, scratching treba overiť s Laurou.</p>
   <div class="edu" id="edu"></div>
 
   <h2>Masáže <em>pre páry</em></h2>
@@ -134,7 +136,8 @@ const STORIES = [["story_cennik_v2","Story · celý cenník (nový štýl)"],["s
 const VYBER = ["post_22_hero", "post_23_logo", "post_25_spomalte", "post_26_stacit_prist", "post_32_ticho", "post_21_rovnovaha", "post_33_okna", "post_27_ponuka", "post_02_citat", "post_34_obeh", "post_40_dychajte", "post_29_poukaz", "post_28_od_hlavy", "post_39_tyzden", "post_36_stuha", "post_37_vstupenka", "post_31_pokoj", "post_09_rezervacia", "post_38_kolaz", "post_16_cas", "post_03_maderoterapia", "post_06_sluzby", "post_07_prva_navsteva", "post_35_pasy"].map(k => ORDER.find(o => o[0] === k));
 const EDU_SETS = [["bankovanie","Bankovanie: prečo ostanú kruhy",6],["maderoterapia","Maderoterapia: čo robia valčeky",6],["prva_masaz","Prvá masáž: čo vás čaká",6],["30_60_90","30, 60 alebo 90 minút",6],["scratching","Scratching therapy",5]];
 const EDU = [];
-EDU_SETS.forEach((e, c) => { for (let k = 1; k <= e[2]; k++) EDU.push([`edu_${c + 1}_${e[0]}_${k}`, `${e[1]} · ${k}/${e[2]}`]); });
+const EDU_VAR = [["", "A · snová"], ["b_", "B · editoriál vo svetle"], ["c_", "C · večer pri sviečke"]];
+EDU_SETS.forEach((e, c) => EDU_VAR.forEach(v => { for (let k = 1; k <= e[2]; k++) EDU.push([`${v[0]}edu_${c + 1}_${e[0]}_${k}`, `${e[1]} · ${v[1]} · ${k}/${e[2]}`]); }));
 const ALL = [...VYBER, ...EDU, ...ORDER, ...COVERS, ...STORIES];
 function tile(item, idx, numbered, set) {
   const b = document.createElement("button");
@@ -148,13 +151,13 @@ function tile(item, idx, numbered, set) {
 const vyber = document.getElementById("vyber");
 VYBER.forEach((it, i) => vyber.appendChild(tile(it, i, true, "v")));
 const eduEl = document.getElementById("edu"); let ei = 0;
-EDU_SETS.forEach(e => { const f = document.createElement("figure"); f.className = "car";
-  const c = document.createElement("figcaption"); c.innerHTML = `<b>${e[1]}</b><span>${e[2]} snímok</span>`; f.appendChild(c);
-  const st = document.createElement("div"); st.className = "strip";
-  for (let k = 0; k < e[2]; k++, ei++) st.appendChild(tile(EDU[ei], ei, false, "e"));
-  f.appendChild(st); eduEl.appendChild(f); });
-const paryEl = document.getElementById("pary");
-ORDER.slice(0, 6).forEach((it, i) => paryEl.appendChild(tile(it, i, false, "a")));
+EDU_SETS.forEach(e => { const f = document.createElement("figure"); f.className = "car topic";
+  const c = document.createElement("figcaption"); c.innerHTML = `<b>${e[1]}</b><span>${e[2]} snímok · 3 varianty</span>`; f.appendChild(c);
+  EDU_VAR.forEach(v => { const lab = document.createElement("p"); lab.className = "vlab"; lab.textContent = v[1]; f.appendChild(lab);
+    const st = document.createElement("div"); st.className = "strip";
+    for (let k = 0; k < e[2]; k++, ei++) st.appendChild(tile(EDU[ei], ei, false, "e"));
+    f.appendChild(st); });
+  eduEl.appendChild(f); });
 const grid = document.getElementById("grid");
 ORDER.forEach((it, i) => grid.appendChild(tile(it, i, true, "a")));
 const covers = document.getElementById("covers");
